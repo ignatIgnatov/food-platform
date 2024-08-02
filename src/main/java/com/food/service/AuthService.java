@@ -2,9 +2,9 @@ package com.food.service;
 
 import com.food.config.jwt.JwtProvider;
 import com.food.dto.request.LoginRequestDto;
-import com.food.dto.response.LoginResponseDto;
 import com.food.dto.request.UserRequestDto;
-import com.food.dto.response.UserResponseDto;
+import com.food.dto.response.LoginResponseDto;
+import com.food.dto.response.UserRegisterResponseDto;
 import com.food.model.Cart;
 import com.food.model.User;
 import com.food.model.UserRole;
@@ -32,7 +32,7 @@ public class AuthService {
   private final CustomUserDetailsService customUserDetailsService;
   private final CartRepository cartRepository;
 
-  public ResponseEntity<UserResponseDto> createUser(UserRequestDto userRequestDto)
+  public ResponseEntity<UserRegisterResponseDto> createUser(UserRequestDto userRequestDto)
       throws Exception {
 
     User user = userRepository.findByEmail(userRequestDto.getEmail());
@@ -53,10 +53,10 @@ public class AuthService {
     cart.setCustomer(savedUser);
     cartRepository.save(cart);
 
-    UserResponseDto userResponseDto = new UserResponseDto();
-    userResponseDto.setMessage("Registration successfully!");
+    UserRegisterResponseDto userRegisterResponseDto = new UserRegisterResponseDto();
+    userRegisterResponseDto.setMessage("Registration successfully!");
 
-    return new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
+    return new ResponseEntity<>(userRegisterResponseDto, HttpStatus.CREATED);
   }
 
   public ResponseEntity<LoginResponseDto> login(LoginRequestDto loginRequestDto) {

@@ -1,6 +1,6 @@
 package com.food.config.jwt;
 
-import com.food.config.jwt.JwtConstant;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import java.util.Collection;
@@ -29,6 +29,15 @@ public class JwtProvider {
         .claim("authorities", roles)
         .signWith(key)
         .compact();
+  }
+
+  public String extractEmailFromToken(String jwt) {
+    return String.valueOf(getClaims(jwt).get("email"));
+  }
+
+  private Claims getClaims(String jwt) {
+    jwt = jwt.substring(7);
+    return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
   }
 
   private String populateAuthorities(Collection<? extends GrantedAuthority> authorities) {

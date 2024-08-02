@@ -1,6 +1,5 @@
 package com.food.config.jwt;
 
-import com.food.config.jwt.JwtConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -32,10 +31,11 @@ public class JwtTokenValidator extends OncePerRequestFilter {
 
     if (jwt != null) {
       jwt = jwt.substring(7);
+      Claims claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
 
       try {
-        String email = String.valueOf(getClaims(jwt).get("email"));
-        String authorities = String.valueOf(getClaims(jwt).get("authorities"));
+        String email = String.valueOf(claims.get("email"));
+        String authorities = String.valueOf(claims.get("authorities"));
 
         List<GrantedAuthority> auth =
             AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
@@ -48,10 +48,5 @@ public class JwtTokenValidator extends OncePerRequestFilter {
     }
 
     filterChain.doFilter(request, response);
-  }
-
-  private Claims getClaims(String jwt) {
-    jwt = jwt.substring(7);
-    return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
   }
 }

@@ -1,9 +1,8 @@
 package com.food.config;
 
+import com.food.config.jwt.JwtTokenValidator;
 import java.util.Collections;
 import java.util.List;
-
-import com.food.config.jwt.JwtTokenValidator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

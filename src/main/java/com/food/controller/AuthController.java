@@ -1,9 +1,9 @@
 package com.food.controller;
 
 import com.food.dto.request.LoginRequestDto;
-import com.food.dto.response.LoginResponseDto;
 import com.food.dto.request.UserRequestDto;
-import com.food.dto.response.UserResponseDto;
+import com.food.dto.response.LoginResponseDto;
+import com.food.dto.response.UserRegisterResponseDto;
 import com.food.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/sign-up")
-  public ResponseEntity<UserResponseDto> createUser(@RequestBody @Valid UserRequestDto userRequestDto)
+  public ResponseEntity<UserRegisterResponseDto> createUser(@RequestBody @Valid UserRequestDto userRequestDto)
       throws Exception {
     return authService.createUser(userRequestDto);
   }
