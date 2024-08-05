@@ -12,8 +12,6 @@ import com.food.repository.CartRepository;
 import com.food.repository.UserRepository;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -32,8 +30,7 @@ public class AuthService {
   private final CustomUserDetailsService customUserDetailsService;
   private final CartRepository cartRepository;
 
-  public ResponseEntity<UserRegisterResponseDto> createUser(UserRequestDto userRequestDto)
-      throws Exception {
+  public UserRegisterResponseDto createUser(UserRequestDto userRequestDto) throws Exception {
 
     User user = userRepository.findByEmail(userRequestDto.getEmail());
 
@@ -56,10 +53,10 @@ public class AuthService {
     UserRegisterResponseDto userRegisterResponseDto = new UserRegisterResponseDto();
     userRegisterResponseDto.setMessage("Registration successfully!");
 
-    return new ResponseEntity<>(userRegisterResponseDto, HttpStatus.CREATED);
+    return userRegisterResponseDto;
   }
 
-  public ResponseEntity<LoginResponseDto> login(LoginRequestDto loginRequestDto) {
+  public LoginResponseDto login(LoginRequestDto loginRequestDto) {
 
     Authentication authentication =
         authenticate(loginRequestDto.getEmail(), loginRequestDto.getPassword());
@@ -73,7 +70,7 @@ public class AuthService {
     loginResponseDto.setMessage("Login successfully!");
     loginResponseDto.setRole(role);
 
-    return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
+    return loginResponseDto;
   }
 
   private Authentication authenticate(String email, String password) {

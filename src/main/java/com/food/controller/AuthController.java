@@ -7,6 +7,7 @@ import com.food.dto.response.UserRegisterResponseDto;
 import com.food.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,13 +22,16 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/sign-up")
-  public ResponseEntity<UserRegisterResponseDto> createUser(@RequestBody @Valid UserRequestDto userRequestDto)
-      throws Exception {
-    return authService.createUser(userRequestDto);
+  public ResponseEntity<UserRegisterResponseDto> createUser(
+      @RequestBody @Valid UserRequestDto userRequestDto) throws Exception {
+    UserRegisterResponseDto userRegisterResponseDto = authService.createUser(userRequestDto);
+    return new ResponseEntity<>(userRegisterResponseDto, HttpStatus.CREATED);
   }
 
   @PostMapping("/sign-in")
-  public ResponseEntity<LoginResponseDto> login(@RequestBody @Valid LoginRequestDto loginRequestDto) {
-    return authService.login(loginRequestDto);
+  public ResponseEntity<LoginResponseDto> login(
+      @RequestBody @Valid LoginRequestDto loginRequestDto) {
+    LoginResponseDto loginResponseDto = authService.login(loginRequestDto);
+    return new ResponseEntity<>(loginResponseDto, HttpStatus.OK);
   }
 }
