@@ -10,20 +10,19 @@ public interface RestaurantService {
 
   Restaurant createRestaurant(CreateRestaurantRequestDto restaurantRequestDto, User user);
 
-  Restaurant updateRestaurant(Long restaurantId, CreateRestaurantRequestDto updatedRestaurant)
-      throws Exception;
+  Restaurant updateRestaurant(Long restaurantId, CreateRestaurantRequestDto updatedRestaurant);
 
-  void deleteRestaurant(Long restaurantId) throws Exception;
+  void deleteRestaurant(Long restaurantId);
 
   List<Restaurant> getAllRestaurants();
 
   List<Restaurant> searchRestaurant(String keyword);
 
-  Restaurant findRestaurantById(Long id) throws Exception;
+  Restaurant findRestaurantById(Long id);
 
-  Restaurant getRestaurantByUserId(Long userId) throws Exception;
+  Restaurant getRestaurantByUserId(Long userId);
 
-  RestaurantDto addToFavorite(Long restaurantId, User user) throws Exception;
+  RestaurantDto addToFavorite(Long restaurantId, User user);
 
-  Restaurant updateRestaurantStatus(Long restaurantId) throws Exception;
+  Restaurant updateRestaurantStatus(Long restaurantId);
 }

@@ -33,15 +33,14 @@ public class RestaurantController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<Restaurant> findRestaurantById(@PathVariable("id") Long id)
-      throws Exception {
+  public ResponseEntity<Restaurant> findRestaurantById(@PathVariable("id") Long id) {
     Restaurant restaurant = restaurantService.findRestaurantById(id);
     return new ResponseEntity<>(restaurant, HttpStatus.OK);
   }
 
   @PutMapping("/{id}/add-to-favorites")
   public ResponseEntity<RestaurantDto> addToFavorites(
-      @RequestHeader("Authorization") String jwt, @PathVariable("id") Long id) throws Exception {
+      @RequestHeader("Authorization") String jwt, @PathVariable("id") Long id) {
     UserResponseDto userResponseDto = userService.findUserByJwtToken(jwt);
     User user = userService.findUserByEmail(userResponseDto.getEmail());
     RestaurantDto restaurant = restaurantService.addToFavorite(id, user);

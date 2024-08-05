@@ -23,7 +23,7 @@ public class AuthController {
 
   @PostMapping("/sign-up")
   public ResponseEntity<UserRegisterResponseDto> createUser(
-      @RequestBody @Valid UserRequestDto userRequestDto) throws Exception {
+      @RequestBody @Valid UserRequestDto userRequestDto) {
     UserRegisterResponseDto userRegisterResponseDto = authService.createUser(userRequestDto);
     return new ResponseEntity<>(userRegisterResponseDto, HttpStatus.CREATED);
   }

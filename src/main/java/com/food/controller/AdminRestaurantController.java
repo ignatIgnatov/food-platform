@@ -23,8 +23,7 @@ public class AdminRestaurantController {
   @PostMapping
   public ResponseEntity<Restaurant> createRestaurant(
       @RequestBody CreateRestaurantRequestDto restaurantRequestDto,
-      @RequestHeader("Authorization") String jwt)
-      throws Exception {
+      @RequestHeader("Authorization") String jwt) {
     UserResponseDto userResponseDto = userService.findUserByJwtToken(jwt);
     User user = userService.findUserByEmail(userResponseDto.getEmail());
     Restaurant restaurant = restaurantService.createRestaurant(restaurantRequestDto, user);
@@ -33,15 +32,13 @@ public class AdminRestaurantController {
 
   @PutMapping("/{id}")
   public ResponseEntity<Restaurant> updateRestaurant(
-      @RequestBody CreateRestaurantRequestDto restaurantRequestDto, @PathVariable("id") Long id)
-      throws Exception {
+      @RequestBody CreateRestaurantRequestDto restaurantRequestDto, @PathVariable("id") Long id) {
     Restaurant restaurant = restaurantService.updateRestaurant(id, restaurantRequestDto);
     return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<MessageResponse> deleteRestaurant(@PathVariable("id") Long id)
-      throws Exception {
+  public ResponseEntity<MessageResponse> deleteRestaurant(@PathVariable("id") Long id) {
     restaurantService.deleteRestaurant(id);
     MessageResponse messageResponse = new MessageResponse();
     messageResponse.setMessage("Restaurant deleted successfully!");
@@ -49,15 +46,13 @@ public class AdminRestaurantController {
   }
 
   @PutMapping("/{id}/status")
-  public ResponseEntity<Restaurant> updateRestaurantStatus(@PathVariable("id") Long id)
-      throws Exception {
+  public ResponseEntity<Restaurant> updateRestaurantStatus(@PathVariable("id") Long id) {
     Restaurant restaurant = restaurantService.updateRestaurantStatus(id);
     return new ResponseEntity<>(restaurant, HttpStatus.OK);
   }
 
   @GetMapping("/{userId}")
-  public ResponseEntity<Restaurant> findRestaurantByUserId(@PathVariable("userId") Long userId)
-      throws Exception {
+  public ResponseEntity<Restaurant> findRestaurantByUserId(@PathVariable("userId") Long userId) {
     Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
     return new ResponseEntity<>(restaurant, HttpStatus.OK);
   }

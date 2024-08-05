@@ -3,6 +3,8 @@ package com.food.config;
 import com.food.config.jwt.JwtTokenValidator;
 import java.util.Collections;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,7 +20,10 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class ApplicationConfig {
+
+  private final MessageSource messageSource;
 
   @Bean
   public PasswordEncoder passwordEncoder() {
@@ -38,7 +43,7 @@ public class ApplicationConfig {
                     .authenticated()
                     .anyRequest()
                     .permitAll())
-        .addFilterBefore(new JwtTokenValidator(), BasicAuthenticationFilter.class)
+        .addFilterBefore(new JwtTokenValidator(messageSource), BasicAuthenticationFilter.class)
         .csrf(AbstractHttpConfigurer::disable)
         .cors(cors -> cors.configurationSource(configurationSource()));
 

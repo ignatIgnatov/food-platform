@@ -2,6 +2,7 @@ package com.food.service;
 
 import com.food.dto.RestaurantDto;
 import com.food.dto.request.CreateRestaurantRequestDto;
+import com.food.exception.restaurant.RestaurantNotFoundException;
 import com.food.model.Address;
 import com.food.model.Restaurant;
 import com.food.model.User;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +23,7 @@ public class RestaurantServiceImpl implements RestaurantService {
   private final RestaurantRepository restaurantRepository;
   private final AddressRepository addressRepository;
   private final UserRepository userRepository;
+  private final MessageSource messageSource;
 
   @Override
   public Restaurant createRestaurant(CreateRestaurantRequestDto restaurantRequestDto, User user) {
@@ -43,7 +46,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
   @Override
   public Restaurant updateRestaurant(
-      Long restaurantId, CreateRestaurantRequestDto updatedRestaurant) throws Exception {
+      Long restaurantId, CreateRestaurantRequestDto updatedRestaurant) {
 
     Restaurant restaurant = findRestaurantById(restaurantId);
 
@@ -61,7 +64,7 @@ public class RestaurantServiceImpl implements RestaurantService {
   }
 
   @Override
-  public void deleteRestaurant(Long restaurantId) throws Exception {
+  public void deleteRestaurant(Long restaurantId) {
     Restaurant restaurant = findRestaurantById(restaurantId);
     restaurantRepository.delete(restaurant);
   }
@@ -78,26 +81,26 @@ public class RestaurantServiceImpl implements RestaurantService {
   }
 
   @Override
-  public Restaurant findRestaurantById(Long id) throws Exception {
+  public Restaurant findRestaurantById(Long id) {
     Optional<Restaurant> restaurant = restaurantRepository.findById(id);
     if (restaurant.isEmpty()) {
-      throw new Exception("Restaurant with id: " + id + " not found!");
+      throw new RestaurantNotFoundException(messageSource);
     }
     return restaurant.get();
   }
 
   @Override
-  public Restaurant getRestaurantByUserId(Long userId) throws Exception {
+  public Restaurant getRestaurantByUserId(Long userId) {
     Restaurant restaurant = restaurantRepository.findByOwnerId(userId);
 
     if (restaurant == null) {
-      throw new Exception("Restaurant with owner id: " + userId + " not found!");
+      throw new RestaurantNotFoundException(messageSource, userId);
     }
     return restaurant;
   }
 
   @Override
-  public RestaurantDto addToFavorite(Long restaurantId, User user) throws Exception {
+  public RestaurantDto addToFavorite(Long restaurantId, User user) {
 
     Restaurant restaurant = findRestaurantById(restaurantId);
 
@@ -128,7 +131,7 @@ public class RestaurantServiceImpl implements RestaurantService {
   }
 
   @Override
-  public Restaurant updateRestaurantStatus(Long restaurantId) throws Exception {
+  public Restaurant updateRestaurantStatus(Long restaurantId) {
 
     Restaurant restaurant = findRestaurantById(restaurantId);
     restaurant.setOpen(!restaurant.isOpen());
