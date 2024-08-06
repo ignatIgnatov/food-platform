@@ -4,16 +4,10 @@ import com.food.config.jwt.JwtProvider;
 import com.food.dto.request.LoginRequestDto;
 import com.food.dto.request.UserRequestDto;
 import com.food.dto.response.LoginResponseDto;
-import com.food.dto.response.UserRegisterResponseDto;
-import com.food.exception.user.UserCreateException;
+import com.food.dto.response.MessageResponse;
 import com.food.exception.user.UserLoginException;
-import com.food.model.Cart;
-import com.food.model.User;
-import com.food.model.UserRole;
-import com.food.repository.CartRepository;
-import com.food.repository.UserRepository;
+import com.food.service.UserService;
 import java.util.Collection;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,37 +21,18 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
 
-  private final UserRepository userRepository;
+  private final UserService userService;
   private final PasswordEncoder passwordEncoder;
   private final JwtProvider jwtProvider;
   private final CustomUserDetailsService customUserDetailsService;
-  private final CartRepository cartRepository;
   private final MessageSource messageSource;
 
-  public UserRegisterResponseDto createUser(UserRequestDto userRequestDto) {
+  public MessageResponse createUser(UserRequestDto userRequestDto) {
 
-    User user = userRepository.findByEmail(userRequestDto.getEmail());
-
-    if (user != null) {
-      throw new UserCreateException(messageSource, true);
-    }
-
-    User createdUser = new User();
-    createdUser.setEmail(userRequestDto.getEmail());
-    createdUser.setFullName(userRequestDto.getFullName());
-    createdUser.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
-    createdUser.setRole(UserRole.valueOf(userRequestDto.getRole()));
-
-    User savedUser = userRepository.save(createdUser);
-
-    Cart cart = new Cart();
-    cart.setCustomer(savedUser);
-    cartRepository.save(cart);
-
-    UserRegisterResponseDto userRegisterResponseDto = new UserRegisterResponseDto();
-    userRegisterResponseDto.setMessage("Registration successfully!");
-
-    return userRegisterResponseDto;
+    userService.createUser(userRequestDto);
+    MessageResponse messageResponse = new MessageResponse();
+    messageResponse.setMessage("Registration successfully!");
+    return messageResponse;
   }
 
   public LoginResponseDto login(LoginRequestDto loginRequestDto) {

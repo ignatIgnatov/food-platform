@@ -3,7 +3,7 @@ package com.food.controller;
 import com.food.dto.request.LoginRequestDto;
 import com.food.dto.request.UserRequestDto;
 import com.food.dto.response.LoginResponseDto;
-import com.food.dto.response.UserRegisterResponseDto;
+import com.food.dto.response.MessageResponse;
 import com.food.service.security.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,10 +22,10 @@ public class AuthController {
   private final AuthService authService;
 
   @PostMapping("/sign-up")
-  public ResponseEntity<UserRegisterResponseDto> createUser(
+  public ResponseEntity<MessageResponse> createUser(
       @RequestBody @Valid UserRequestDto userRequestDto) {
-    UserRegisterResponseDto userRegisterResponseDto = authService.createUser(userRequestDto);
-    return new ResponseEntity<>(userRegisterResponseDto, HttpStatus.CREATED);
+    MessageResponse messageResponse = authService.createUser(userRequestDto);
+    return new ResponseEntity<>(messageResponse, HttpStatus.CREATED);
   }
 
   @PostMapping("/sign-in")
