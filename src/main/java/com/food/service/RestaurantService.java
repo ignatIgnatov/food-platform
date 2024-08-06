@@ -1,6 +1,6 @@
 package com.food.service;
 
-import com.food.dto.RestaurantDto;
+import com.food.dto.response.RestaurantResponseDto;
 import com.food.dto.request.CreateRestaurantRequestDto;
 import com.food.model.Restaurant;
 import com.food.model.User;
@@ -22,7 +22,7 @@ public interface RestaurantService {
 
   Restaurant getRestaurantByUserId(Long userId);
 
-  RestaurantDto addToFavorite(Long restaurantId, User user);
+  RestaurantResponseDto addToFavorite(Long restaurantId, User user);
 
   Restaurant updateRestaurantStatus(Long restaurantId);
 }

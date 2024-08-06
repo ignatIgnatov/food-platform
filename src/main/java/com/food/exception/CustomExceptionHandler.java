@@ -1,6 +1,6 @@
 package com.food.exception;
 
-import com.food.dto.ExceptionResponse;
+import com.food.dto.response.ExceptionResponse;
 import com.food.exception.common.AccessDeniedException;
 import com.food.exception.common.ApiException;
 import com.food.exception.common.InternalServerErrorException;
@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
  */
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
+
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ExceptionResponse> handleRuntimeExceptions(RuntimeException exception) {
         exception.printStackTrace();

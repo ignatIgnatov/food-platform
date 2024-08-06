@@ -1,4 +1,4 @@
-package com.food.dto;
+package com.food.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

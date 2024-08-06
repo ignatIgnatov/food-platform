@@ -1,10 +1,11 @@
-package com.food.service;
+package com.food.service.impl;
 
 import com.food.config.jwt.JwtProvider;
 import com.food.dto.response.UserResponseDto;
 import com.food.exception.user.UserNotFoundException;
 import com.food.model.User;
 import com.food.repository.UserRepository;
+import com.food.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;

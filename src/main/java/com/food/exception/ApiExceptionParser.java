@@ -1,6 +1,6 @@
 package com.food.exception;
 
-import com.food.dto.ExceptionResponse;
+import com.food.dto.response.ExceptionResponse;
 import com.food.exception.common.ApiException;
 
 import java.time.LocalDateTime;

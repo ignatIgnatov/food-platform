@@ -1,6 +1,6 @@
-package com.food.service;
+package com.food.service.impl;
 
-import com.food.dto.RestaurantDto;
+import com.food.dto.response.RestaurantResponseDto;
 import com.food.dto.request.CreateRestaurantRequestDto;
 import com.food.exception.restaurant.RestaurantNotFoundException;
 import com.food.model.Address;
@@ -12,6 +12,8 @@ import com.food.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+import com.food.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -100,19 +102,19 @@ public class RestaurantServiceImpl implements RestaurantService {
   }
 
   @Override
-  public RestaurantDto addToFavorite(Long restaurantId, User user) {
+  public RestaurantResponseDto addToFavorite(Long restaurantId, User user) {
 
     Restaurant restaurant = findRestaurantById(restaurantId);
 
-    RestaurantDto restaurantDto = new RestaurantDto();
-    restaurantDto.setDescription(restaurant.getDescription());
-    restaurantDto.setImages(restaurant.getImages());
-    restaurantDto.setTitle(restaurant.getName());
-    restaurantDto.setId(restaurant.getId());
+    RestaurantResponseDto restaurantResponseDto = new RestaurantResponseDto();
+    restaurantResponseDto.setDescription(restaurant.getDescription());
+    restaurantResponseDto.setImages(restaurant.getImages());
+    restaurantResponseDto.setTitle(restaurant.getName());
+    restaurantResponseDto.setId(restaurant.getId());
 
     boolean isFavorite = false;
-    List<RestaurantDto> favorites = user.getFavorites();
-    for (RestaurantDto favorite : favorites) {
+    List<RestaurantResponseDto> favorites = user.getFavorites();
+    for (RestaurantResponseDto favorite : favorites) {
       if (favorite.getId().equals(restaurantId)) {
         isFavorite = true;
         break;
@@ -122,12 +124,12 @@ public class RestaurantServiceImpl implements RestaurantService {
     if (isFavorite) {
       favorites.removeIf(favorite -> favorite.getId().equals(restaurantId));
     } else {
-      favorites.add(restaurantDto);
+      favorites.add(restaurantResponseDto);
     }
 
     userRepository.save(user);
 
-    return restaurantDto;
+    return restaurantResponseDto;
   }
 
   @Override

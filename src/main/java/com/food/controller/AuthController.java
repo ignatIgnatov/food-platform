@@ -4,7 +4,7 @@ import com.food.dto.request.LoginRequestDto;
 import com.food.dto.request.UserRequestDto;
 import com.food.dto.response.LoginResponseDto;
 import com.food.dto.response.UserRegisterResponseDto;
-import com.food.service.AuthService;
+import com.food.service.security.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

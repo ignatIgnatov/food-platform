@@ -1,6 +1,6 @@
 package com.food.controller;
 
-import com.food.dto.RestaurantDto;
+import com.food.dto.response.RestaurantResponseDto;
 import com.food.dto.response.UserResponseDto;
 import com.food.model.Restaurant;
 import com.food.model.User;
@@ -39,11 +39,11 @@ public class RestaurantController {
   }
 
   @PutMapping("/{id}/add-to-favorites")
-  public ResponseEntity<RestaurantDto> addToFavorites(
+  public ResponseEntity<RestaurantResponseDto> addToFavorites(
       @RequestHeader("Authorization") String jwt, @PathVariable("id") Long id) {
     UserResponseDto userResponseDto = userService.findUserByJwtToken(jwt);
     User user = userService.findUserByEmail(userResponseDto.getEmail());
-    RestaurantDto restaurant = restaurantService.addToFavorite(id, user);
+    RestaurantResponseDto restaurant = restaurantService.addToFavorite(id, user);
     return new ResponseEntity<>(restaurant, HttpStatus.OK);
   }
 }

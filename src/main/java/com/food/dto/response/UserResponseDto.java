@@ -1,6 +1,5 @@
 package com.food.dto.response;
 
-import com.food.dto.RestaurantDto;
 import com.food.model.Address;
 import com.food.model.Order;
 import com.food.model.UserRole;
@@ -17,6 +16,6 @@ public class UserResponseDto {
     private String email;
     private UserRole role;
     private List<Order> orders;
-    private List<RestaurantDto> favorites;
+    private List<RestaurantResponseDto> favorites;
     private List<Address> addresses;
 }

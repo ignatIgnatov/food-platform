@@ -1,4 +1,4 @@
-package com.food.service;
+package com.food.service.security;
 
 import com.food.exception.user.UserNotFoundException;
 import com.food.model.User;
