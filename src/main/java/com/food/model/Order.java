@@ -39,5 +39,5 @@ public class Order {
 //    private Payment payment;
 
     private int totalItems;
-    private int totalPrice;
+    private Long totalPrice;
 }
