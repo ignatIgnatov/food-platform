@@ -12,7 +12,6 @@ import com.food.service.IngredientsService;
 import com.food.service.RestaurantService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,7 +21,6 @@ public class IngredientServiceImpl implements IngredientsService {
   private final IngredientItemRepository ingredientItemRepository;
   private final IngredientCategoryRepository ingredientCategoryRepository;
   private final RestaurantService restaurantService;
-  private final MessageSource messageSource;
 
   @Override
   public IngredientCategory createIngredientCategory(IngredientCategoryRequestDto request) {
@@ -39,7 +37,7 @@ public class IngredientServiceImpl implements IngredientsService {
   public IngredientCategory findIngredientCategoryById(Long id) {
     return ingredientCategoryRepository
         .findById(id)
-        .orElseThrow(() -> new IngredientCategoryNotFoundException(messageSource));
+        .orElseThrow(IngredientCategoryNotFoundException::new);
   }
 
   @Override
@@ -76,7 +74,7 @@ public class IngredientServiceImpl implements IngredientsService {
     IngredientsItem ingredientsItem =
         ingredientItemRepository
             .findById(id)
-            .orElseThrow(() -> new IngredientItemNotFoundException(messageSource));
+            .orElseThrow(IngredientItemNotFoundException::new);
 
     ingredientsItem.setInStoke(!ingredientsItem.isInStoke());
     return ingredientItemRepository.save(ingredientsItem);

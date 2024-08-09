@@ -13,7 +13,6 @@ import com.food.service.RestaurantService;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +22,6 @@ public class RestaurantServiceImpl implements RestaurantService {
   private final RestaurantRepository restaurantRepository;
   private final AddressRepository addressRepository;
   private final UserRepository userRepository;
-  private final MessageSource messageSource;
 
   @Override
   public Restaurant createRestaurant(CreateRestaurantRequestDto restaurantRequestDto, User user) {
@@ -82,9 +80,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
   @Override
   public Restaurant findRestaurantById(Long id) {
-    return restaurantRepository.findById(id).orElseThrow(
-            () -> new RestaurantNotFoundException(messageSource)
-    );
+    return restaurantRepository.findById(id).orElseThrow(RestaurantNotFoundException::new);
   }
 
   @Override
@@ -92,7 +88,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     Restaurant restaurant = restaurantRepository.findByOwnerId(userId);
 
     if (restaurant == null) {
-      throw new RestaurantNotFoundException(messageSource, userId);
+      throw new RestaurantNotFoundException(userId);
     }
     return restaurant;
   }

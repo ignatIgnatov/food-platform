@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,7 +25,6 @@ public class OrderServiceImpl implements OrderService {
 
   private final OrderRepository orderRepository;
   private final OrderItemRepository orderItemRepository;
-  private final MessageSource messageSource;
   private final UserService userService;
   private final AddressRepository addressRepository;
   private final UserRepository userRepository;
@@ -90,7 +88,7 @@ public class OrderServiceImpl implements OrderService {
       return orderRepository.save(order);
     }
 
-    throw new OrderStatusException(messageSource);
+    throw new OrderStatusException();
   }
 
   @Override
@@ -108,17 +106,13 @@ public class OrderServiceImpl implements OrderService {
   public List<Order> getRestaurantOrders(Long restaurantId, String orderStatus) {
     List<Order> orders = orderRepository.findByRestaurantId(restaurantId);
     if (orderStatus != null) {
-      return orders.stream()
-              .filter(order -> order.getOrderStatus().equals(orderStatus))
-              .toList();
+      return orders.stream().filter(order -> order.getOrderStatus().equals(orderStatus)).toList();
     }
     return orders;
   }
 
   @Override
   public Order findOrderById(Long orderId) {
-    return orderRepository
-        .findById(orderId)
-        .orElseThrow(() -> new OrderNotFoundException(messageSource));
+    return orderRepository.findById(orderId).orElseThrow(OrderNotFoundException::new);
   }
 }

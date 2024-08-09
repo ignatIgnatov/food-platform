@@ -25,7 +25,6 @@ public class CartServiceImpl implements CartService {
   private final CartItemRepository cartItemRepository;
   private final UserService userService;
   private final FoodService foodService;
-  private final MessageSource messageSource;
 
   @Override
   public CartItem addItemToCart(AddCartItemRequestDto requestDto, String jwt) {
@@ -88,7 +87,7 @@ public class CartServiceImpl implements CartService {
 
   @Override
   public Cart findCartById(Long id) {
-    return cartRepository.findById(id).orElseThrow(() -> new CartNotFoundException(messageSource));
+    return cartRepository.findById(id).orElseThrow(CartNotFoundException::new);
   }
 
   @Override
@@ -106,9 +105,7 @@ public class CartServiceImpl implements CartService {
   }
 
   private CartItem findCartItemById(Long id) {
-    return cartItemRepository
-        .findById(id)
-        .orElseThrow(() -> new CartItemNotFoundException(messageSource));
+    return cartItemRepository.findById(id).orElseThrow(CartItemNotFoundException::new);
   }
 
   private User getUserFromToken(String jwt) {

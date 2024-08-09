@@ -9,7 +9,6 @@ import com.food.repository.FoodRepository;
 import com.food.service.FoodService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Service;
 public class FoodServiceImpl implements FoodService {
 
   private final FoodRepository foodRepository;
-  private final MessageSource messageSource;
 
   @Override
   public Food createFood(
@@ -86,7 +84,7 @@ public class FoodServiceImpl implements FoodService {
   public Food findFoodById(Long foodId) {
     return foodRepository
         .findById(foodId)
-        .orElseThrow(() -> new FoodNotFoundException(messageSource));
+        .orElseThrow(FoodNotFoundException::new);
   }
 
   @Override

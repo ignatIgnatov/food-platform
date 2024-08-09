@@ -7,7 +7,6 @@ import com.food.exception.common.InternalServerErrorException;
 import com.food.exception.common.ValidationException;
 import com.food.exception.user.UserLoginException;
 import jakarta.validation.ConstraintViolationException;
-import java.util.Objects;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -25,7 +24,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ExceptionResponse> handleRuntimeExceptions(RuntimeException exception) {
         exception.printStackTrace();
-        return handleApiExceptions(new InternalServerErrorException(Objects.requireNonNull(getMessageSource())));
+    return handleApiExceptions(new InternalServerErrorException(exception.getMessage()));
     }
 
     @ExceptionHandler(InternalAuthenticationServiceException.class)
@@ -41,12 +40,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ExceptionResponse> handleBadCredentialsExceptions() {
-        return handleApiExceptions(new UserLoginException(getMessageSource()));
+        return handleApiExceptions(new UserLoginException());
     }
 
     @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
     public ResponseEntity<ExceptionResponse> handleAccessDeniedExceptions() {
-        return handleApiExceptions(new AccessDeniedException(getMessageSource()));
+        return handleApiExceptions(new AccessDeniedException("Access denied!"));
     }
 
     @ExceptionHandler(ApiException.class)

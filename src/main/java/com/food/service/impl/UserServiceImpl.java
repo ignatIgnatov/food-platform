@@ -12,7 +12,6 @@ import com.food.repository.CartRepository;
 import com.food.repository.UserRepository;
 import com.food.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,6 @@ public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
   private final JwtProvider jwtProvider;
-  private final MessageSource messageSource;
   private final PasswordEncoder passwordEncoder;
   private final CartRepository cartRepository;
 
@@ -49,7 +47,7 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findByEmail(email);
 
     if (user == null) {
-      throw new UserNotFoundException(messageSource);
+      throw new UserNotFoundException();
     }
 
     return user;
@@ -61,7 +59,7 @@ public class UserServiceImpl implements UserService {
     User user = userRepository.findByEmail(userRequestDto.getEmail());
 
     if (user != null) {
-      throw new UserCreateException(messageSource, true);
+      throw new UserCreateException(true);
     }
 
     User createdUser = new User();
