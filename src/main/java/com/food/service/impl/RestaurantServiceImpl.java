@@ -1,7 +1,7 @@
 package com.food.service.impl;
 
-import com.food.dto.response.RestaurantResponseDto;
 import com.food.dto.request.CreateRestaurantRequestDto;
+import com.food.dto.response.RestaurantResponseDto;
 import com.food.exception.restaurant.RestaurantNotFoundException;
 import com.food.model.Address;
 import com.food.model.Restaurant;
@@ -9,11 +9,9 @@ import com.food.model.User;
 import com.food.repository.AddressRepository;
 import com.food.repository.RestaurantRepository;
 import com.food.repository.UserRepository;
+import com.food.service.RestaurantService;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
-
-import com.food.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -84,11 +82,9 @@ public class RestaurantServiceImpl implements RestaurantService {
 
   @Override
   public Restaurant findRestaurantById(Long id) {
-    Optional<Restaurant> restaurant = restaurantRepository.findById(id);
-    if (restaurant.isEmpty()) {
-      throw new RestaurantNotFoundException(messageSource);
-    }
-    return restaurant.get();
+    return restaurantRepository.findById(id).orElseThrow(
+            () -> new RestaurantNotFoundException(messageSource)
+    );
   }
 
   @Override

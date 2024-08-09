@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class IngredientController {
 
-  private IngredientsService ingredientsService;
+  private final IngredientsService ingredientsService;
 
   @PostMapping("/category")
   public ResponseEntity<IngredientCategory> createIngredientCategory(

@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 public class FoodController {
 
   private final FoodService foodService;
-  private final RestaurantService restaurantService;
 
   @GetMapping("/search")
   public ResponseEntity<List<Food>> searchFood(@RequestParam String name) {

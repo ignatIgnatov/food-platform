@@ -51,6 +51,8 @@ public class CartServiceImpl implements CartService {
     CartItem savedCartItem = cartItemRepository.save(newCartItem);
 
     cart.getItems().add(savedCartItem);
+    cart.setTotal(calculateCartTotals(cart));
+    cartRepository.save(cart);
 
     return savedCartItem;
   }
@@ -60,6 +62,7 @@ public class CartServiceImpl implements CartService {
     CartItem cartItem = findCartItemById(cartItemId);
     cartItem.setQuantity(quantity);
     cartItem.setTotalPrice(cartItem.getFood().getPrice() * quantity);
+    cartItem.getCart().setTotal(calculateCartTotals(cartItem.getCart()));
     return cartItemRepository.save(cartItem);
   }
 
@@ -69,6 +72,7 @@ public class CartServiceImpl implements CartService {
     CartItem cartItem = findCartItemById(cartItemId);
 
     cart.getItems().remove(cartItem);
+    cart.setTotal(cart.getTotal() - cartItem.getTotalPrice());
     return cartRepository.save(cart);
   }
 
@@ -97,6 +101,7 @@ public class CartServiceImpl implements CartService {
   public Cart clearCart(String jwt) {
     Cart cart = findCartByUserId(jwt);
     cart.getItems().clear();
+    cart.setTotal(null);
     return cartRepository.save(cart);
   }
 

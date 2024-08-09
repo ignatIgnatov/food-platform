@@ -59,19 +59,19 @@ public class FoodServiceImpl implements FoodService {
     List<Food> foods = foodRepository.findByRestaurantId(restaurantId);
 
     if (isVegetarian) {
-      foods = filterByVegetarian(foods);
+      return filterByVegetarian(foods);
     }
 
     if (isNonVeg) {
-      foods = filterByNonVeg(foods);
+      return filterByNonVeg(foods);
     }
 
     if (isSeasonal) {
-      foods = filterBySeason(foods);
+      return filterBySeason(foods);
     }
 
     if (foodCategory != null && !foodCategory.trim().isEmpty()) {
-      foods = filterByCategory(foods, foodCategory);
+      return filterByCategory(foods, foodCategory);
     }
 
     return foods;
