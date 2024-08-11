@@ -10,6 +10,6 @@ public class RestaurantNotFoundException extends NoSuchElementException {
     }
 
     public RestaurantNotFoundException(MessageSource messageSource, Long userId) {
-        super(messageSource.getMessage("restaurant.not.found", null, LocaleContextHolder.getLocale()) + "For owner with id: " + userId);
+        super(messageSource.getMessage("restaurant.not.found", null, LocaleContextHolder.getLocale()) + " For owner with id: " + userId);
     }
 }

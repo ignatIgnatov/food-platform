@@ -3,6 +3,7 @@ package com.food.controller;
 import com.food.dto.request.CreateRestaurantRequestDto;
 import com.food.dto.response.MessageResponse;
 import com.food.dto.response.UserResponseDto;
+import com.food.model.Food;
 import com.food.model.Restaurant;
 import com.food.model.User;
 import com.food.service.RestaurantService;
