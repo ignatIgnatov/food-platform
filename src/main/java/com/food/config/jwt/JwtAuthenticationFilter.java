@@ -1,7 +1,7 @@
 package com.food.config.jwt;
 
-import com.food.exception.common.UnauthorizedException;
 import com.food.exception.jwt.InvalidTokenException;
+import com.food.exception.jwt.JwtExpiredException;
 import com.food.service.UserService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -35,44 +35,41 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
 
-    try {
-      if (request.getServletPath().contains(AUTH_PATH)) {
-        filterChain.doFilter(request, response);
-        return;
-      }
-
-      request.setAttribute(USER_KEY, null);
-
-      final String authHeader = request.getHeader(JWT_HEADER);
-
-      if (authHeader == null || !authHeader.startsWith(JWT_PREFIX)) {
-        filterChain.doFilter(request, response);
-        throw new InvalidTokenException(messageSource);
-      }
-
-      final String jwt = authHeader.substring(7);
-      final String userEmail = jwtService.extractUsername(jwt);
-
-      if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-        UserDetails userDetails = userService.findUserByEmail(userEmail);
-
-        if (jwtService.isTokenValid(jwt, userDetails)) {
-          UsernamePasswordAuthenticationToken authToken =
-              new UsernamePasswordAuthenticationToken(
-                  userDetails, null, userDetails.getAuthorities());
-
-          authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-          SecurityContextHolder.getContext().setAuthentication(authToken);
-        }
-
-        request.setAttribute(USER_KEY, userDetails);
-      }
+    if (request.getServletPath().contains(AUTH_PATH)) {
       filterChain.doFilter(request, response);
+      return;
+    }
 
-    } catch (UnauthorizedException exception) {
-      SecurityContextHolder.clearContext();
+    request.setAttribute(USER_KEY, null);
+
+    final String authHeader = request.getHeader(JWT_HEADER);
+
+    if (authHeader == null || !authHeader.startsWith(JWT_PREFIX)) {
+      filterChain.doFilter(request, response);
       throw new InvalidTokenException(messageSource);
     }
+
+    final String jwt = authHeader.substring(7);
+    final String userEmail = jwtService.extractUsername(jwt);
+
+    if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+      UserDetails userDetails = userService.findUserByEmail(userEmail);
+
+      if (jwtService.isTokenValid(jwt, userDetails)) {
+        UsernamePasswordAuthenticationToken authToken =
+            new UsernamePasswordAuthenticationToken(
+                userDetails, null, userDetails.getAuthorities());
+
+        authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+      } else {
+        filterChain.doFilter(request, response);
+        throw new JwtExpiredException(messageSource);
+      }
+
+      request.setAttribute(USER_KEY, userDetails);
+    }
+    filterChain.doFilter(request, response);
   }
 }
