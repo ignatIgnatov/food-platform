@@ -1,12 +1,13 @@
 package com.food.service.security;
 
-import com.food.config.jwt.JwtProvider;
 import com.food.dto.request.LoginRequestDto;
 import com.food.dto.request.UserRequestDto;
 import com.food.dto.response.LoginResponseDto;
 import com.food.dto.response.MessageResponse;
 import com.food.exception.user.UserLoginException;
+import com.food.model.User;
 import com.food.service.UserService;
+import com.food.config.jwt.JwtService;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -23,7 +24,7 @@ public class AuthService {
 
   private final UserService userService;
   private final PasswordEncoder passwordEncoder;
-  private final JwtProvider jwtProvider;
+  private final JwtService jwtService;
   private final CustomUserDetailsService customUserDetailsService;
   private final MessageSource messageSource;
 
@@ -42,7 +43,9 @@ public class AuthService {
 
     Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
     String role = authorities.isEmpty() ? null : authorities.iterator().next().getAuthority();
-    String jwt = jwtProvider.generateToken(authentication);
+
+    User user = userService.findUserByEmail(loginRequestDto.getEmail());
+    String jwt = jwtService.generateToken(user);
 
     LoginResponseDto loginResponseDto = new LoginResponseDto();
     loginResponseDto.setJwt(jwt);
