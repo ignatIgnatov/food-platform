@@ -50,7 +50,9 @@ class JwtAuthenticationFilterTest {
     when(request.getServletPath()).thenReturn("/some-path");
     when(request.getHeader("Authorization")).thenReturn(null);
 
-    assertThrows(InvalidTokenException.class, () -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
+    assertThrows(
+        InvalidTokenException.class,
+        () -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
 
     verify(filterChain, times(1)).doFilter(request, response);
   }
@@ -70,13 +72,16 @@ class JwtAuthenticationFilterTest {
 
     when(jwtService.isTokenValid("validToken", user)).thenReturn(false);
 
-    assertThrows(JwtExpiredException.class, () -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
+    assertThrows(
+        JwtExpiredException.class,
+        () -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
 
     verify(filterChain, times(1)).doFilter(request, response);
   }
 
   @Test
-  void testDoFilterInternal_ValidToken_ShouldSetAuthentication() throws ServletException, IOException {
+  void testDoFilterInternal_ValidToken_ShouldSetAuthentication()
+      throws ServletException, IOException {
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
     FilterChain filterChain = mock(FilterChain.class);
@@ -97,7 +102,8 @@ class JwtAuthenticationFilterTest {
   }
 
   @Test
-  void testDoFilterInternal_AuthHeaderNotStartsWithBearer_ShouldThrow() throws ServletException, IOException {
+  void testDoFilterInternal_AuthHeaderNotStartsWithBearer_ShouldThrow()
+      throws ServletException, IOException {
     HttpServletRequest request = mock(HttpServletRequest.class);
     HttpServletResponse response = mock(HttpServletResponse.class);
     FilterChain filterChain = mock(FilterChain.class);
@@ -105,7 +111,9 @@ class JwtAuthenticationFilterTest {
     when(request.getServletPath()).thenReturn("/some-path");
     when(request.getHeader("Authorization")).thenReturn("InvalidToken");
 
-    assertThrows(InvalidTokenException.class, () -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
+    assertThrows(
+        InvalidTokenException.class,
+        () -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
 
     verify(filterChain, times(1)).doFilter(request, response);
   }
@@ -121,7 +129,9 @@ class JwtAuthenticationFilterTest {
     when(jwtService.extractUsername("invalidToken")).thenReturn("user@example.com");
     when(userService.findUserByEmail("user@example.com")).thenReturn(mock(User.class));
 
-    assertThrows(JwtExpiredException.class, () -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
+    assertThrows(
+        JwtExpiredException.class,
+        () -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
 
     verify(filterChain, times(1)).doFilter(request, response);
   }
