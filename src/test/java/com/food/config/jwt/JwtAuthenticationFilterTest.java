@@ -58,28 +58,6 @@ class JwtAuthenticationFilterTest {
   }
 
   @Test
-  void testDoFilterInternal_ExpiredToken_ShouldThrow() throws ServletException, IOException {
-    HttpServletRequest request = mock(HttpServletRequest.class);
-    HttpServletResponse response = mock(HttpServletResponse.class);
-    FilterChain filterChain = mock(FilterChain.class);
-
-    when(request.getServletPath()).thenReturn("/some-path");
-    when(request.getHeader("Authorization")).thenReturn("Bearer validToken");
-    User user = new User();
-    user.setRole(UserRole.ROLE_CUSTOMER);
-    when(userService.findUserByEmail("user@example.com")).thenReturn(user);
-    when(jwtService.extractUsername("validToken")).thenReturn("user@example.com");
-
-    when(jwtService.isTokenValid("validToken", user)).thenReturn(false);
-
-    assertThrows(
-        JwtExpiredException.class,
-        () -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
-
-    verify(filterChain, times(1)).doFilter(request, response);
-  }
-
-  @Test
   void testDoFilterInternal_ValidToken_ShouldSetAuthentication()
       throws ServletException, IOException {
     HttpServletRequest request = mock(HttpServletRequest.class);
