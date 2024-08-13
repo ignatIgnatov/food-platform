@@ -1,6 +1,6 @@
 package com.food.service.impl;
 
-import com.food.config.jwt.JwtProvider;
+import com.food.config.jwt.JwtService;
 import com.food.dto.request.UserRequestDto;
 import com.food.dto.response.UserResponseDto;
 import com.food.exception.user.UserCreateException;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
   private final UserRepository userRepository;
-  private final JwtProvider jwtProvider;
+  private final JwtService jwtService;
   private final MessageSource messageSource;
   private final PasswordEncoder passwordEncoder;
   private final CartRepository cartRepository;
@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
   @Override
   public UserResponseDto findUserByJwtToken(String jwt) {
 
-    String email = jwtProvider.extractEmailFromToken(jwt);
+    String email = jwtService.extractUsername(jwt);
 
     User user = findUserByEmail(email);
     return UserResponseDto.builder()
@@ -45,20 +45,15 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User findUserByEmail(String email) {
-
-    User user = userRepository.findByEmail(email);
-
-    if (user == null) {
-      throw new UserNotFoundException(messageSource);
-    }
-
-    return user;
+    return userRepository
+        .findByEmail(email)
+        .orElseThrow(() -> new UserNotFoundException(messageSource));
   }
 
   @Override
   public User createUser(UserRequestDto userRequestDto) {
 
-    User user = userRepository.findByEmail(userRequestDto.getEmail());
+    User user = userRepository.findByEmail(userRequestDto.getEmail()).orElse(null);
 
     if (user != null) {
       throw new UserCreateException(messageSource, true);
@@ -70,10 +65,12 @@ public class UserServiceImpl implements UserService {
     createdUser.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
     createdUser.setRole(UserRole.valueOf(userRequestDto.getRole()));
 
+    userRepository.save(createdUser);
+
     Cart cart = new Cart();
     cart.setCustomer(createdUser);
     cartRepository.save(cart);
 
-    return userRepository.save(createdUser);
+    return createdUser;
   }
 }
