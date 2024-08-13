@@ -17,5 +17,5 @@ jobs:
           cache: maven
 
       - name: mvn clean install
-        run: mvn clean install -DskipTests
+        run: mvn clean install
 
