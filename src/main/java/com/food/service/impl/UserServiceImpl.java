@@ -20,57 +20,52 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-  private final UserRepository userRepository;
-  private final JwtService jwtService;
-  private final MessageSource messageSource;
-  private final PasswordEncoder passwordEncoder;
-  private final CartRepository cartRepository;
+    private final UserRepository userRepository;
+    private final JwtService jwtService;
+    private final MessageSource messageSource;
+    private final PasswordEncoder passwordEncoder;
+    private final CartRepository cartRepository;
 
-  @Override
-  public UserResponseDto findUserByJwtToken(String jwt) {
-
-    String email = jwtService.extractUsername(jwt);
-
-    User user = findUserByEmail(email);
-    return UserResponseDto.builder()
-        .id(user.getId())
-        .fullName(user.getFullName())
-        .email(user.getEmail())
-        .role(user.getRole())
-        .addresses(user.getAddresses())
-        .favorites(user.getFavorites())
-        .orders(user.getOrders())
-        .build();
-  }
-
-  @Override
-  public User findUserByEmail(String email) {
-    return userRepository
-        .findByEmail(email)
-        .orElseThrow(() -> new UserNotFoundException(messageSource));
-  }
-
-  @Override
-  public User createUser(UserRequestDto userRequestDto) {
-
-    User user = userRepository.findByEmail(userRequestDto.getEmail()).orElse(null);
-
-    if (user != null) {
-      throw new UserCreateException(messageSource, true);
+    @Override
+    public UserResponseDto findUserByJwtToken(String jwt) {
+        String email = jwtService.extractUsername(jwt.substring(7));
+        User user = findUserByEmail(email);
+        return UserResponseDto.builder()
+                .id(user.getId())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .role(user.getRole())
+                .build();
     }
 
-    User createdUser = new User();
-    createdUser.setEmail(userRequestDto.getEmail());
-    createdUser.setFullName(userRequestDto.getFullName());
-    createdUser.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
-    createdUser.setRole(UserRole.valueOf(userRequestDto.getRole()));
+    @Override
+    public User findUserByEmail(String email) {
+        return userRepository
+                .findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException(messageSource));
+    }
 
-    userRepository.save(createdUser);
+    @Override
+    public User createUser(UserRequestDto userRequestDto) {
 
-    Cart cart = new Cart();
-    cart.setCustomer(createdUser);
-    cartRepository.save(cart);
+        User user = userRepository.findByEmail(userRequestDto.getEmail()).orElse(null);
 
-    return createdUser;
-  }
+        if (user != null) {
+            throw new UserCreateException(messageSource, true);
+        }
+
+        User createdUser = new User();
+        createdUser.setEmail(userRequestDto.getEmail());
+        createdUser.setFullName(userRequestDto.getFullName());
+        createdUser.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
+        createdUser.setRole(UserRole.valueOf(userRequestDto.getRole()));
+
+        userRepository.save(createdUser);
+
+        Cart cart = new Cart();
+        cart.setCustomer(createdUser);
+        cartRepository.save(cart);
+
+        return createdUser;
+    }
 }

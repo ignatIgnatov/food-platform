@@ -1,21 +1,18 @@
 package com.food.dto.response;
 
-import com.food.model.Address;
-import com.food.model.Order;
 import com.food.model.UserRole;
-import java.util.List;
-
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class UserResponseDto {
-    private  Long id;
+    private Long id;
     private String fullName;
     private String email;
     private UserRole role;
-    private List<Order> orders;
-    private List<RestaurantResponseDto> favorites;
-    private List<Address> addresses;
 }
