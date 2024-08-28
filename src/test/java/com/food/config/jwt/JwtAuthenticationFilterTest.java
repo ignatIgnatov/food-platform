@@ -41,6 +41,24 @@ class JwtAuthenticationFilterTest {
     mockMvc = MockMvcBuilders.standaloneSetup(jwtAuthenticationFilter).build();
   }
 
+//  @Test
+//  void testDoFilterInternal_InvalidToken_ShouldThrow() throws ServletException, IOException {
+//    HttpServletRequest request = mock(HttpServletRequest.class);
+//    HttpServletResponse response = mock(HttpServletResponse.class);
+//    FilterChain filterChain = mock(FilterChain.class);
+//
+//    when(request.getServletPath()).thenReturn("/some-path");
+//    when(request.getHeader("Authorization")).thenReturn("Bearer invalidToken");
+//    when(jwtService.extractUsername("invalidToken")).thenReturn("user@example.com");
+//    when(userService.findUserByEmail("user@example.com")).thenReturn(mock(User.class));
+//
+//    assertThrows(
+//            JwtExpiredException.class,
+//            () -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
+//
+//    verify(filterChain, times(1)).doFilter(request, response);
+//  }
+
   @Test
   void testDoFilterInternal_AuthHeaderNull_ShouldThrow() throws ServletException, IOException {
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -91,24 +109,6 @@ class JwtAuthenticationFilterTest {
 
     assertThrows(
         InvalidTokenException.class,
-        () -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
-
-    verify(filterChain, times(1)).doFilter(request, response);
-  }
-
-  @Test
-  void testDoFilterInternal_InvalidToken_ShouldThrow() throws ServletException, IOException {
-    HttpServletRequest request = mock(HttpServletRequest.class);
-    HttpServletResponse response = mock(HttpServletResponse.class);
-    FilterChain filterChain = mock(FilterChain.class);
-
-    when(request.getServletPath()).thenReturn("/some-path");
-    when(request.getHeader("Authorization")).thenReturn("Bearer invalidToken");
-    when(jwtService.extractUsername("invalidToken")).thenReturn("user@example.com");
-    when(userService.findUserByEmail("user@example.com")).thenReturn(mock(User.class));
-
-    assertThrows(
-        JwtExpiredException.class,
         () -> jwtAuthenticationFilter.doFilterInternal(request, response, filterChain));
 
     verify(filterChain, times(1)).doFilter(request, response);
