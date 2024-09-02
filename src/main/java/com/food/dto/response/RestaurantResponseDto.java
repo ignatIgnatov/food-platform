@@ -10,11 +10,12 @@ import java.util.List;
 @Embeddable
 public class RestaurantResponseDto {
 
-  private String title;
+  private Long id;
+  private String name;
 
   @Column(length = 1000)
   private List<String> images;
 
   private String description;
-  private Long id;
+
 }
