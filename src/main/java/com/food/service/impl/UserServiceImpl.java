@@ -12,6 +12,7 @@ import com.food.repository.CartRepository;
 import com.food.repository.UserRepository;
 import com.food.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,17 +26,13 @@ public class UserServiceImpl implements UserService {
     private final MessageSource messageSource;
     private final PasswordEncoder passwordEncoder;
     private final CartRepository cartRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public UserResponseDto findUserByJwtToken(String jwt) {
         String email = jwtService.extractUsername(jwt.substring(7));
         User user = findUserByEmail(email);
-        return UserResponseDto.builder()
-                .id(user.getId())
-                .fullName(user.getFullName())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .build();
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
     @Override

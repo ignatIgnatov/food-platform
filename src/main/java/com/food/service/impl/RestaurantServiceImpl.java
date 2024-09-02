@@ -109,11 +109,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         Restaurant restaurant = findRestaurantById(restaurantId);
 
-        RestaurantResponseDto restaurantResponseDto = new RestaurantResponseDto();
-        restaurantResponseDto.setDescription(restaurant.getDescription());
-        restaurantResponseDto.setImages(restaurant.getImages());
-        restaurantResponseDto.setName(restaurant.getName());
-        restaurantResponseDto.setId(restaurant.getId());
+        RestaurantResponseDto restaurantResponseDto = modelMapper.map(restaurant, RestaurantResponseDto.class);
 
         boolean isFavorite = false;
         List<RestaurantResponseDto> favorites = user.getFavorites();
@@ -130,6 +126,7 @@ public class RestaurantServiceImpl implements RestaurantService {
             favorites.add(restaurantResponseDto);
         }
 
+        user.setFavorites(favorites);
         userRepository.save(user);
 
         return restaurantResponseDto;

@@ -17,5 +17,6 @@ public class RestaurantResponseDto {
   private List<String> images;
 
   private String description;
+  private boolean open;
 
 }
