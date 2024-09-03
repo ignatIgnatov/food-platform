@@ -33,18 +33,12 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         Address address = addressRepository.save(restaurantRequestDto.getAddress());
 
-        Restaurant restaurant = new Restaurant();
+        Restaurant restaurant = modelMapper.map(restaurantRequestDto, Restaurant.class);
         restaurant.setAddress(address);
-        restaurant.setContactInformation(restaurantRequestDto.getContactInformation());
-        restaurant.setCuisineType(restaurantRequestDto.getCuisineType());
-        restaurant.setImages(restaurantRequestDto.getImages());
-        restaurant.setDescription(restaurantRequestDto.getDescription());
-        restaurant.setName(restaurantRequestDto.getName());
-        restaurant.setOpeningHours(restaurantRequestDto.getOpeningHours());
         restaurant.setRegistrationDate(LocalDateTime.now());
         restaurant.setOwner(user);
-
         restaurantRepository.save(restaurant);
+
         return modelMapper.map(restaurant, RestaurantResponseDto.class);
     }
 

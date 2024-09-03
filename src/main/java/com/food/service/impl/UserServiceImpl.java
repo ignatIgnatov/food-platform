@@ -7,7 +7,6 @@ import com.food.exception.user.UserCreateException;
 import com.food.exception.user.UserNotFoundException;
 import com.food.model.Cart;
 import com.food.model.User;
-import com.food.model.UserRole;
 import com.food.repository.CartRepository;
 import com.food.repository.UserRepository;
 import com.food.service.UserService;
@@ -46,17 +45,12 @@ public class UserServiceImpl implements UserService {
     public User createUser(UserRequestDto userRequestDto) {
 
         User user = userRepository.findByEmail(userRequestDto.getEmail()).orElse(null);
-
         if (user != null) {
             throw new UserCreateException(messageSource, true);
         }
 
-        User createdUser = new User();
-        createdUser.setEmail(userRequestDto.getEmail());
-        createdUser.setFullName(userRequestDto.getFullName());
+        User createdUser = modelMapper.map(userRequestDto, User.class);
         createdUser.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
-        createdUser.setRole(UserRole.valueOf(userRequestDto.getRole()));
-
         userRepository.save(createdUser);
 
         Cart cart = new Cart();
