@@ -1,6 +1,7 @@
 package com.food.service.impl;
 
 import com.food.dto.request.CreateRestaurantRequestDto;
+import com.food.dto.response.CreateRestaurantResponseDto;
 import com.food.dto.response.RestaurantResponseDto;
 import com.food.exception.restaurant.RestaurantNotFoundException;
 import com.food.model.Address;
@@ -29,7 +30,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final ModelMapper modelMapper;
 
     @Override
-    public RestaurantResponseDto createRestaurant(CreateRestaurantRequestDto restaurantRequestDto, User user) {
+    public CreateRestaurantResponseDto createRestaurant(CreateRestaurantRequestDto restaurantRequestDto, User user) {
 
         Address address = addressRepository.save(restaurantRequestDto.getAddress());
 
@@ -39,7 +40,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setOwner(user);
         restaurantRepository.save(restaurant);
 
-        return modelMapper.map(restaurant, RestaurantResponseDto.class);
+        return modelMapper.map(restaurant, CreateRestaurantResponseDto.class);
     }
 
     @Override
@@ -69,11 +70,13 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public List<RestaurantResponseDto> getAllRestaurants() {
-        return restaurantRepository
+        List<RestaurantResponseDto> restaurants = restaurantRepository
                 .findAll()
                 .stream()
                 .map(restaurant -> modelMapper.map(restaurant, RestaurantResponseDto.class))
                 .toList();
+        System.out.println("Restaurants count: " + restaurants.size());
+        return restaurants;
     }
 
     @Override
@@ -82,10 +85,11 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant findRestaurantById(Long id) {
-        return restaurantRepository.findById(id).orElseThrow(
+    public RestaurantResponseDto getRestaurantById(Long id) {
+        Restaurant restaurant = restaurantRepository.findById(id).orElseThrow(
                 () -> new RestaurantNotFoundException(messageSource)
         );
+        return modelMapper.map(restaurant, RestaurantResponseDto.class);
     }
 
     @Override
@@ -99,15 +103,15 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public RestaurantResponseDto addToFavorite(Long restaurantId, User user) {
+    public CreateRestaurantResponseDto addToFavorite(Long restaurantId, User user) {
 
         Restaurant restaurant = findRestaurantById(restaurantId);
 
-        RestaurantResponseDto restaurantResponseDto = modelMapper.map(restaurant, RestaurantResponseDto.class);
+        CreateRestaurantResponseDto createRestaurantResponseDto = modelMapper.map(restaurant, CreateRestaurantResponseDto.class);
 
         boolean isFavorite = false;
-        List<RestaurantResponseDto> favorites = user.getFavorites();
-        for (RestaurantResponseDto favorite : favorites) {
+        List<CreateRestaurantResponseDto> favorites = user.getFavorites();
+        for (CreateRestaurantResponseDto favorite : favorites) {
             if (favorite.getId().equals(restaurantId)) {
                 isFavorite = true;
                 break;
@@ -117,13 +121,13 @@ public class RestaurantServiceImpl implements RestaurantService {
         if (isFavorite) {
             favorites.removeIf(favorite -> favorite.getId().equals(restaurantId));
         } else {
-            favorites.add(restaurantResponseDto);
+            favorites.add(createRestaurantResponseDto);
         }
 
         user.setFavorites(favorites);
         userRepository.save(user);
 
-        return restaurantResponseDto;
+        return createRestaurantResponseDto;
     }
 
     @Override
@@ -133,5 +137,12 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setOpen(!restaurant.isOpen());
 
         return restaurantRepository.save(restaurant);
+    }
+
+    @Override
+    public Restaurant findRestaurantById(Long id) {
+        return restaurantRepository.findById(id).orElseThrow(
+                () -> new RestaurantNotFoundException(messageSource)
+        );
     }
 }

@@ -17,6 +17,6 @@ public class UserResponseDto {
     private String fullName;
     private String email;
     private UserRole role;
-    private List<RestaurantResponseDto> favorites;
+    private List<CreateRestaurantResponseDto> favorites;
     private List<AddressResponseDto> addresses;
 }

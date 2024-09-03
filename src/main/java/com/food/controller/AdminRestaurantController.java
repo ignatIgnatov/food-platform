@@ -2,7 +2,7 @@ package com.food.controller;
 
 import com.food.dto.request.CreateRestaurantRequestDto;
 import com.food.dto.response.MessageResponse;
-import com.food.dto.response.RestaurantResponseDto;
+import com.food.dto.response.CreateRestaurantResponseDto;
 import com.food.dto.response.UserResponseDto;
 import com.food.model.Restaurant;
 import com.food.model.User;
@@ -22,12 +22,12 @@ public class AdminRestaurantController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<RestaurantResponseDto> createRestaurant(
+    public ResponseEntity<CreateRestaurantResponseDto> createRestaurant(
             @RequestBody CreateRestaurantRequestDto restaurantRequestDto,
             @RequestHeader("Authorization") String jwt) {
         UserResponseDto userResponseDto = userService.findUserByJwtToken(jwt);
         User user = userService.findUserByEmail(userResponseDto.getEmail());
-        RestaurantResponseDto restaurant = restaurantService.createRestaurant(restaurantRequestDto, user);
+        CreateRestaurantResponseDto restaurant = restaurantService.createRestaurant(restaurantRequestDto, user);
         return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
     }
 
