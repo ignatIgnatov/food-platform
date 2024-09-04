@@ -10,7 +10,7 @@ public class OrderResponseDto {
 
     private Long id;
     private UserResponseDto customer;
-    private RestaurantResponseDto restaurant;
+    private Long restaurantId;
     private Long totalAmount;
     private String orderStatus;
     private Date createdDate;

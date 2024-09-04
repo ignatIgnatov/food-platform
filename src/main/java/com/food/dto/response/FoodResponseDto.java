@@ -18,4 +18,5 @@ public class FoodResponseDto {
     private boolean isSeasonal;
     private List<IngredientItemResponseDto> ingredientsItems;
     private Date creationDate;
+    private Long restaurantId;
 }

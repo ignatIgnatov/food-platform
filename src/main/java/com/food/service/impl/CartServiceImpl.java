@@ -77,8 +77,9 @@ public class CartServiceImpl implements CartService {
         Cart cart = findCartById(user.getId());
         CartItem cartItem = findCartItemById(cartItemId);
 
-        cart.getItems().remove(cartItem);
         cart.setTotal(cart.getTotal() - cartItem.getTotalPrice());
+        cart.getItems().remove(cartItem);
+
         cartRepository.save(cart);
         return modelMapper.map(cart, CartResponseDto.class);
     }

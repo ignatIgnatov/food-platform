@@ -1,6 +1,8 @@
 package com.food.service.impl;
 
 import com.food.dto.request.OrderRequestDto;
+import com.food.dto.response.CartResponseDto;
+import com.food.dto.response.OrderResponseDto;
 import com.food.dto.response.UserResponseDto;
 import com.food.exception.order.OrderNotFoundException;
 import com.food.exception.order.OrderStatusException;
@@ -14,6 +16,7 @@ import com.food.service.OrderService;
 import com.food.service.RestaurantService;
 import com.food.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +36,10 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final RestaurantService restaurantService;
     private final CartService cartService;
+    private final ModelMapper modelMapper;
 
     @Override
-    public Order createOrder(OrderRequestDto orderRequestDto, String jwt) {
+    public OrderResponseDto createOrder(OrderRequestDto orderRequestDto, String jwt) {
         Address shippingAddress = orderRequestDto.getDeliveryAddress();
         Address savedAddress = addressRepository.save(shippingAddress);
 
@@ -56,7 +60,8 @@ public class OrderServiceImpl implements OrderService {
         order.setOrderStatus("PENDING");
         order.setRestaurant(restaurant);
 
-        Cart cart = cartService.findCartById(user.getId());
+        CartResponseDto cartResponseDto = cartService.findCartByUserId(jwt);
+        Cart cart = cartService.findCartById(cartResponseDto.getId());
 
         List<OrderItem> orderItems = new ArrayList<>();
 
@@ -77,18 +82,19 @@ public class OrderServiceImpl implements OrderService {
 
         restaurant.getOrders().add(savedOrder);
 
-        return savedOrder;
+        return modelMapper.map(savedOrder, OrderResponseDto.class);
     }
 
     @Override
-    public Order updateOrder(Long orderId, String orderStatus) {
+    public OrderResponseDto updateOrder(Long orderId, String orderStatus) {
         Order order = findOrderById(orderId);
         if (orderStatus.equals("OUT_FOR_DELIVERY")
                 || orderStatus.equals("DELIVERED")
                 || orderStatus.equals("COMPLETED")
                 || orderStatus.equals("PENDING")) {
             order.setOrderStatus(orderStatus);
-            return orderRepository.save(order);
+            orderRepository.save(order);
+            return modelMapper.map(order, OrderResponseDto.class);
         }
 
         throw new OrderStatusException(messageSource);
