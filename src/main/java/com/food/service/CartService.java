@@ -1,22 +1,24 @@
 package com.food.service;
 
 import com.food.dto.request.AddCartItemRequestDto;
+import com.food.dto.response.CartItemResponseDto;
+import com.food.dto.response.CartResponseDto;
 import com.food.model.Cart;
 import com.food.model.CartItem;
 
 public interface CartService {
 
-  CartItem addItemToCart(AddCartItemRequestDto requestDto, String jwt);
+  CartItemResponseDto addItemToCart(AddCartItemRequestDto requestDto, String jwt);
 
-  CartItem updateCartItemQuantity(Long cartItemId, int quantity);
+  CartItemResponseDto updateCartItemQuantity(Long cartItemId, int quantity);
 
-  Cart removeItemFromCart(Long cartItemId, String jwt);
+  CartResponseDto removeItemFromCart(Long cartItemId, String jwt);
 
   Long calculateCartTotals(Cart cart);
 
   Cart findCartById(Long id);
 
-  Cart findCartByUserId(String jwt);
+  CartResponseDto findCartByUserId(String jwt);
 
-  Cart clearCart(String jwt);
+  CartResponseDto clearCart(String jwt);
 }

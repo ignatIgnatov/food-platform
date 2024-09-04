@@ -2,8 +2,8 @@ package com.food.controller;
 
 import com.food.dto.request.AddCartItemRequestDto;
 import com.food.dto.request.UpdateCartItemRequest;
-import com.food.model.Cart;
-import com.food.model.CartItem;
+import com.food.dto.response.CartItemResponseDto;
+import com.food.dto.response.CartResponseDto;
 import com.food.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,36 +18,36 @@ public class CartController {
     private final CartService cartService;
 
     @PutMapping("/cart/add")
-    public ResponseEntity<CartItem> addItemToCart(
+    public ResponseEntity<CartItemResponseDto> addItemToCart(
             @RequestBody AddCartItemRequestDto request, @RequestHeader("Authorization") String jwt) {
-        CartItem cartItem = cartService.addItemToCart(request, jwt);
+        CartItemResponseDto cartItem = cartService.addItemToCart(request, jwt);
         return new ResponseEntity<>(cartItem, HttpStatus.OK);
     }
 
     @PutMapping("/cart-item/update")
-    public ResponseEntity<CartItem> updateCartItemQuantity(
+    public ResponseEntity<CartItemResponseDto> updateCartItemQuantity(
             @RequestBody UpdateCartItemRequest request, @RequestHeader("Authorization") String jwt) {
-        CartItem cartItem =
+        CartItemResponseDto cartItem =
                 cartService.updateCartItemQuantity(request.getCartItemId(), request.getQuantity());
         return new ResponseEntity<>(cartItem, HttpStatus.OK);
     }
 
     @DeleteMapping("/cart-item/{id}/remove")
-    public ResponseEntity<Cart> removeCartItem(
+    public ResponseEntity<CartResponseDto> removeCartItem(
             @PathVariable("id") Long id, @RequestHeader("Authorization") String jwt) {
-        Cart cart = cartService.removeItemFromCart(id, jwt);
+        CartResponseDto cart = cartService.removeItemFromCart(id, jwt);
         return new ResponseEntity<>(cart, HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/cart/clear")
-    public ResponseEntity<Cart> clearCart(@RequestHeader("Authorization") String jwt) {
-        Cart cart = cartService.clearCart(jwt);
+    public ResponseEntity<CartResponseDto> clearCart(@RequestHeader("Authorization") String jwt) {
+        CartResponseDto cart = cartService.clearCart(jwt);
         return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 
     @GetMapping("/cart")
-    public ResponseEntity<Cart> findUserCart(@RequestHeader("Authorization") String jwt) {
-        Cart cart = cartService.findCartByUserId(jwt);
+    public ResponseEntity<CartResponseDto> findUserCart(@RequestHeader("Authorization") String jwt) {
+        CartResponseDto cart = cartService.findCartByUserId(jwt);
         return new ResponseEntity<>(cart, HttpStatus.OK);
     }
 }

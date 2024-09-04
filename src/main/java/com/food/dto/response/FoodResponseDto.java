@@ -14,7 +14,6 @@ public class FoodResponseDto {
     private CategoryResponseDto foodCategory;
     private List<String> images;
     private boolean available;
-    private RestaurantResponseDto restaurant;
     private boolean isVegetarian;
     private boolean isSeasonal;
     private List<IngredientItemResponseDto> ingredientsItems;

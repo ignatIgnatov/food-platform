@@ -1,6 +1,5 @@
 package com.food.dto.response;
 
-import com.food.model.Restaurant;
 import lombok.Data;
 
 import java.util.List;
@@ -9,6 +8,4 @@ import java.util.List;
 public class IngredientCategoryResponseDto {
     private Long id;
     private String name;
-    private Restaurant restaurant;
-    private List<IngredientItemResponseDto> ingredientsItems;
 }

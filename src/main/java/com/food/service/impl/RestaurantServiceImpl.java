@@ -70,13 +70,11 @@ public class RestaurantServiceImpl implements RestaurantService {
 
     @Override
     public List<RestaurantResponseDto> getAllRestaurants() {
-        List<RestaurantResponseDto> restaurants = restaurantRepository
+        return restaurantRepository
                 .findAll()
                 .stream()
                 .map(restaurant -> modelMapper.map(restaurant, RestaurantResponseDto.class))
                 .toList();
-        System.out.println("Restaurants count: " + restaurants.size());
-        return restaurants;
     }
 
     @Override
