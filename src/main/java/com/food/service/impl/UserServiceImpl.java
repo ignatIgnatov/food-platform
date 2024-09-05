@@ -7,11 +7,11 @@ import com.food.exception.user.UserCreateException;
 import com.food.exception.user.UserNotFoundException;
 import com.food.model.Cart;
 import com.food.model.User;
-import com.food.model.UserRole;
 import com.food.repository.CartRepository;
 import com.food.repository.UserRepository;
 import com.food.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -25,17 +25,13 @@ public class UserServiceImpl implements UserService {
     private final MessageSource messageSource;
     private final PasswordEncoder passwordEncoder;
     private final CartRepository cartRepository;
+    private final ModelMapper modelMapper;
 
     @Override
     public UserResponseDto findUserByJwtToken(String jwt) {
         String email = jwtService.extractUsername(jwt.substring(7));
         User user = findUserByEmail(email);
-        return UserResponseDto.builder()
-                .id(user.getId())
-                .fullName(user.getFullName())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .build();
+        return modelMapper.map(user, UserResponseDto.class);
     }
 
     @Override
@@ -49,17 +45,12 @@ public class UserServiceImpl implements UserService {
     public User createUser(UserRequestDto userRequestDto) {
 
         User user = userRepository.findByEmail(userRequestDto.getEmail()).orElse(null);
-
         if (user != null) {
             throw new UserCreateException(messageSource, true);
         }
 
-        User createdUser = new User();
-        createdUser.setEmail(userRequestDto.getEmail());
-        createdUser.setFullName(userRequestDto.getFullName());
+        User createdUser = modelMapper.map(userRequestDto, User.class);
         createdUser.setPassword(passwordEncoder.encode(userRequestDto.getPassword()));
-        createdUser.setRole(UserRole.valueOf(userRequestDto.getRole()));
-
         userRepository.save(createdUser);
 
         Cart cart = new Cart();

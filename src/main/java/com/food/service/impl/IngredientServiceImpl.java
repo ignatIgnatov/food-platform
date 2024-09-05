@@ -1,6 +1,8 @@
 package com.food.service.impl;
 
 import com.food.dto.request.IngredientCategoryRequestDto;
+import com.food.dto.response.IngredientCategoryResponseDto;
+import com.food.dto.response.IngredientItemResponseDto;
 import com.food.exception.ingredient.IngredientCategoryNotFoundException;
 import com.food.exception.ingredient.IngredientItemNotFoundException;
 import com.food.model.IngredientCategory;
@@ -12,6 +14,7 @@ import com.food.service.IngredientsService;
 import com.food.service.RestaurantService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
@@ -23,16 +26,18 @@ public class IngredientServiceImpl implements IngredientsService {
   private final IngredientCategoryRepository ingredientCategoryRepository;
   private final RestaurantService restaurantService;
   private final MessageSource messageSource;
+  private final ModelMapper modelMapper;
 
   @Override
-  public IngredientCategory createIngredientCategory(IngredientCategoryRequestDto request) {
+  public IngredientCategoryResponseDto createIngredientCategory(IngredientCategoryRequestDto request) {
     Restaurant restaurant = restaurantService.findRestaurantById(request.getRestaurantId());
 
     IngredientCategory ingredientCategory = new IngredientCategory();
     ingredientCategory.setRestaurant(restaurant);
     ingredientCategory.setName(request.getName());
+    ingredientCategoryRepository.save(ingredientCategory);
 
-    return ingredientCategoryRepository.save(ingredientCategory);
+    return modelMapper.map(ingredientCategory, IngredientCategoryResponseDto.class);
   }
 
   @Override
@@ -49,7 +54,7 @@ public class IngredientServiceImpl implements IngredientsService {
   }
 
   @Override
-  public IngredientsItem createIngredientItem(
+  public IngredientItemResponseDto createIngredientItem(
       Long restaurantId, String ingredientName, Long ingredientCategoryId) {
     Restaurant restaurant = restaurantService.findRestaurantById(restaurantId);
 
@@ -63,12 +68,15 @@ public class IngredientServiceImpl implements IngredientsService {
     IngredientsItem createdIngredientItem = ingredientItemRepository.save(ingredientsItem);
 
     category.getIngredientsItems().add(createdIngredientItem);
-    return createdIngredientItem;
+    return modelMapper.map(createdIngredientItem, IngredientItemResponseDto.class);
   }
 
   @Override
-  public List<IngredientsItem> findRestaurantIngredients(Long restaurantId) {
-    return ingredientItemRepository.findByRestaurantId(restaurantId);
+  public List<IngredientItemResponseDto> findRestaurantIngredients(Long restaurantId) {
+    List<IngredientsItem> ingredientsItems = ingredientItemRepository.findByRestaurantId(restaurantId);
+    return ingredientsItems.stream()
+            .map(ingredient -> modelMapper.map(ingredient, IngredientItemResponseDto.class))
+            .toList();
   }
 
   @Override

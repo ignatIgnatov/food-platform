@@ -1,7 +1,7 @@
 package com.food.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.food.dto.response.RestaurantResponseDto;
+import com.food.dto.response.CreateRestaurantResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +33,7 @@ public class User implements UserDetails {
     private List<Order> orders = new ArrayList<>();
 
     @ElementCollection
-    private List<RestaurantResponseDto> favorites = new ArrayList<>();
+    private List<CreateRestaurantResponseDto> favorites = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Address> addresses = new ArrayList<>();

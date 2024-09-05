@@ -1,5 +1,6 @@
 package com.food.controller;
 
+import com.food.dto.response.OrderResponseDto;
 import com.food.model.Order;
 import com.food.service.OrderService;
 import java.util.List;
@@ -23,9 +24,9 @@ public class AdminOrderController {
   }
 
   @PutMapping("/{id}/{status}")
-  public ResponseEntity<Order> updateOrderStatus(
+  public ResponseEntity<OrderResponseDto> updateOrderStatus(
       @PathVariable("id") Long id, @PathVariable("status") String status) {
-    Order order = orderService.updateOrder(id, status);
+    OrderResponseDto order = orderService.updateOrder(id, status);
     return new ResponseEntity<>(order, HttpStatus.OK);
   }
 }

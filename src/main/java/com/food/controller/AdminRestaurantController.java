@@ -2,8 +2,8 @@ package com.food.controller;
 
 import com.food.dto.request.CreateRestaurantRequestDto;
 import com.food.dto.response.MessageResponse;
+import com.food.dto.response.CreateRestaurantResponseDto;
 import com.food.dto.response.UserResponseDto;
-import com.food.model.Food;
 import com.food.model.Restaurant;
 import com.food.model.User;
 import com.food.service.RestaurantService;
@@ -18,43 +18,43 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AdminRestaurantController {
 
-  private final RestaurantService restaurantService;
-  private final UserService userService;
+    private final RestaurantService restaurantService;
+    private final UserService userService;
 
-  @PostMapping
-  public ResponseEntity<Restaurant> createRestaurant(
-      @RequestBody CreateRestaurantRequestDto restaurantRequestDto,
-      @RequestHeader("Authorization") String jwt) {
-    UserResponseDto userResponseDto = userService.findUserByJwtToken(jwt);
-    User user = userService.findUserByEmail(userResponseDto.getEmail());
-    Restaurant restaurant = restaurantService.createRestaurant(restaurantRequestDto, user);
-    return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
-  }
+    @PostMapping
+    public ResponseEntity<CreateRestaurantResponseDto> createRestaurant(
+            @RequestBody CreateRestaurantRequestDto restaurantRequestDto,
+            @RequestHeader("Authorization") String jwt) {
+        UserResponseDto userResponseDto = userService.findUserByJwtToken(jwt);
+        User user = userService.findUserByEmail(userResponseDto.getEmail());
+        CreateRestaurantResponseDto restaurant = restaurantService.createRestaurant(restaurantRequestDto, user);
+        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+    }
 
-  @PutMapping("/{id}")
-  public ResponseEntity<Restaurant> updateRestaurant(
-      @RequestBody CreateRestaurantRequestDto restaurantRequestDto, @PathVariable("id") Long id) {
-    Restaurant restaurant = restaurantService.updateRestaurant(id, restaurantRequestDto);
-    return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
-  }
+    @PutMapping("/{id}")
+    public ResponseEntity<Restaurant> updateRestaurant(
+            @RequestBody CreateRestaurantRequestDto restaurantRequestDto, @PathVariable("id") Long id) {
+        Restaurant restaurant = restaurantService.updateRestaurant(id, restaurantRequestDto);
+        return new ResponseEntity<>(restaurant, HttpStatus.CREATED);
+    }
 
-  @DeleteMapping("/{id}")
-  public ResponseEntity<MessageResponse> deleteRestaurant(@PathVariable("id") Long id) {
-    restaurantService.deleteRestaurant(id);
-    MessageResponse messageResponse = new MessageResponse();
-    messageResponse.setMessage("Restaurant deleted successfully!");
-    return new ResponseEntity<>(messageResponse, HttpStatus.NO_CONTENT);
-  }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<MessageResponse> deleteRestaurant(@PathVariable("id") Long id) {
+        restaurantService.deleteRestaurant(id);
+        MessageResponse messageResponse = new MessageResponse();
+        messageResponse.setMessage("Restaurant deleted successfully!");
+        return new ResponseEntity<>(messageResponse, HttpStatus.NO_CONTENT);
+    }
 
-  @PutMapping("/{id}/status")
-  public ResponseEntity<Restaurant> updateRestaurantStatus(@PathVariable("id") Long id) {
-    Restaurant restaurant = restaurantService.updateRestaurantStatus(id);
-    return new ResponseEntity<>(restaurant, HttpStatus.OK);
-  }
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Restaurant> updateRestaurantStatus(@PathVariable("id") Long id) {
+        Restaurant restaurant = restaurantService.updateRestaurantStatus(id);
+        return new ResponseEntity<>(restaurant, HttpStatus.OK);
+    }
 
-  @GetMapping("/{userId}")
-  public ResponseEntity<Restaurant> findRestaurantByUserId(@PathVariable("userId") Long userId) {
-    Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
-    return new ResponseEntity<>(restaurant, HttpStatus.OK);
-  }
+    @GetMapping("/{userId}")
+    public ResponseEntity<Restaurant> findRestaurantByUserId(@PathVariable("userId") Long userId) {
+        Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
+        return new ResponseEntity<>(restaurant, HttpStatus.OK);
+    }
 }

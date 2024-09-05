@@ -1,13 +1,14 @@
 package com.food.service;
 
+import com.food.dto.response.CategoryResponseDto;
 import com.food.model.Category;
 
 import java.util.List;
 
 public interface CategoryService {
-    Category createCategory(String name, Long userId);
+    CategoryResponseDto createCategory(String name, Long userId);
 
-    List<Category> findCategoryByRestaurantId(Long userId);
+    List<CategoryResponseDto> findCategoryByRestaurantId(Long restaurantId);
 
     Category findCategoryById(Long id);
 }
