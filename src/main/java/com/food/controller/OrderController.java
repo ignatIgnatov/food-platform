@@ -2,10 +2,14 @@ package com.food.controller;
 
 import com.food.dto.request.OrderRequestDto;
 import com.food.dto.response.OrderResponseDto;
+import com.food.dto.response.PaymentResponseDto;
 import com.food.dto.response.UserResponseDto;
+import com.food.model.Order;
 import com.food.model.User;
 import com.food.service.OrderService;
+import com.food.service.PaymentService;
 import com.food.service.UserService;
+import com.stripe.exception.StripeException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +24,14 @@ public class OrderController {
 
     private final OrderService orderService;
     private final UserService userService;
+    private final PaymentService paymentService;
 
     @PostMapping
-    public ResponseEntity<OrderResponseDto> createOrder(@RequestBody OrderRequestDto request, @RequestHeader("Authorization") String jwt) {
-        OrderResponseDto order = orderService.createOrder(request, jwt);
-        return new ResponseEntity<>(order, HttpStatus.CREATED);
+    public ResponseEntity<PaymentResponseDto> createOrder(@RequestBody OrderRequestDto request, @RequestHeader("Authorization") String jwt) throws StripeException {
+        OrderResponseDto orderResponseDto = orderService.createOrder(request, jwt);
+        Order order = orderService.findOrderById(orderResponseDto.getId());
+        PaymentResponseDto response = paymentService.createPaymentLink(order);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @GetMapping("/user")
