@@ -107,8 +107,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<Order> getUserOrders(Long userId) {
-        return orderRepository.findByCustomerId(userId);
+    public List<OrderResponseDto> getUserOrders(Long userId) {
+        return orderRepository.findByCustomerId(userId).stream()
+                .map(order -> modelMapper.map(order, OrderResponseDto.class))
+                .toList();
     }
 
     @Override

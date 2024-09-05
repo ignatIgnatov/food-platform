@@ -3,7 +3,6 @@ package com.food.controller;
 import com.food.dto.request.OrderRequestDto;
 import com.food.dto.response.OrderResponseDto;
 import com.food.dto.response.UserResponseDto;
-import com.food.model.Order;
 import com.food.model.User;
 import com.food.service.OrderService;
 import com.food.service.UserService;
@@ -29,10 +28,10 @@ public class OrderController {
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<Order>> getUserOrders(@RequestHeader("Authorization") String jwt) {
+    public ResponseEntity<List<OrderResponseDto>> getUserOrders(@RequestHeader("Authorization") String jwt) {
         UserResponseDto userResponseDto = userService.findUserByJwtToken(jwt);
         User user = userService.findUserByEmail(userResponseDto.getEmail());
-        List<Order> orders = orderService.getUserOrders(user.getId());
+        List<OrderResponseDto> orders = orderService.getUserOrders(user.getId());
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 }
