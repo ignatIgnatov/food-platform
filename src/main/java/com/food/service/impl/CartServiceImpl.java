@@ -108,8 +108,8 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartResponseDto clearCart(String jwt) {
-        User user = getUserFromToken(jwt);
-        Cart cart = findCartById(user.getId());
+        CartResponseDto cartResponseDto = findCartByUserId(jwt);
+        Cart cart = findCartById(cartResponseDto.getId());
         cart.getItems().clear();
         cart.setTotal(null);
         cartRepository.save(cart);
