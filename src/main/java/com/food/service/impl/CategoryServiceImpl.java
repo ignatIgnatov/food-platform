@@ -1,6 +1,7 @@
 package com.food.service.impl;
 
 import com.food.dto.response.CategoryResponseDto;
+import com.food.dto.response.RestaurantResponseDto;
 import com.food.exception.category.CategoryNotFoundException;
 import com.food.model.Category;
 import com.food.model.Restaurant;
@@ -25,7 +26,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryResponseDto createCategory(String name, Long userId) {
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
+        RestaurantResponseDto restaurantResponseDto = restaurantService.getRestaurantByUserId(userId);
+        Restaurant restaurant = restaurantService.findRestaurantById(restaurantResponseDto.getId());
         Category category = new Category();
         category.setName(name);
         category.setRestaurant(restaurant);

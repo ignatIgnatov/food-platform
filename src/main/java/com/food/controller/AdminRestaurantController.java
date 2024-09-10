@@ -3,6 +3,7 @@ package com.food.controller;
 import com.food.dto.request.CreateRestaurantRequestDto;
 import com.food.dto.response.MessageResponse;
 import com.food.dto.response.CreateRestaurantResponseDto;
+import com.food.dto.response.RestaurantResponseDto;
 import com.food.dto.response.UserResponseDto;
 import com.food.model.Restaurant;
 import com.food.model.User;
@@ -52,9 +53,10 @@ public class AdminRestaurantController {
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<Restaurant> findRestaurantByUserId(@PathVariable("userId") Long userId) {
-        Restaurant restaurant = restaurantService.getRestaurantByUserId(userId);
+    @GetMapping("/user")
+    public ResponseEntity<RestaurantResponseDto> findRestaurantByUserId(@RequestHeader("Authorization") String jwt) {
+        UserResponseDto userResponseDto = userService.findUserByJwtToken(jwt);
+        RestaurantResponseDto restaurant = restaurantService.getRestaurantByUserId(userResponseDto.getId());
         return new ResponseEntity<>(restaurant, HttpStatus.OK);
     }
 }

@@ -21,7 +21,7 @@ public interface RestaurantService {
 
   RestaurantResponseDto getRestaurantById(Long id);
 
-  Restaurant getRestaurantByUserId(Long userId);
+  RestaurantResponseDto getRestaurantByUserId(Long userId);
 
   CreateRestaurantResponseDto addToFavorite(Long restaurantId, User user);
 

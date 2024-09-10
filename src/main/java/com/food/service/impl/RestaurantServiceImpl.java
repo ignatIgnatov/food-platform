@@ -91,13 +91,13 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     @Override
-    public Restaurant getRestaurantByUserId(Long userId) {
+    public RestaurantResponseDto getRestaurantByUserId(Long userId) {
         Restaurant restaurant = restaurantRepository.findByOwnerId(userId);
 
         if (restaurant == null) {
             throw new RestaurantNotFoundException(messageSource, userId);
         }
-        return restaurant;
+        return modelMapper.map(restaurant, RestaurantResponseDto.class);
     }
 
     @Override
