@@ -14,7 +14,7 @@ public interface IngredientsService {
 
     IngredientCategory findIngredientCategoryById(Long id);
 
-    List<IngredientCategory> findIngredientCategoryByRestaurantId(Long id);
+    List<IngredientCategoryResponseDto> findIngredientCategoryByRestaurantId(Long id);
 
     IngredientItemResponseDto createIngredientItem(Long restaurantId, String ingredientName, Long ingredientCategoryId);
 

@@ -1,10 +1,12 @@
 package com.food.service.impl;
 
 import com.food.dto.request.CreateFoodRequest;
+import com.food.dto.request.FoodCategoryRequestDto;
 import com.food.dto.response.FoodResponseDto;
 import com.food.exception.food.FoodNotFoundException;
 import com.food.model.Category;
 import com.food.model.Food;
+import com.food.model.IngredientsItem;
 import com.food.model.Restaurant;
 import com.food.repository.FoodRepository;
 import com.food.service.FoodService;
@@ -26,18 +28,19 @@ public class FoodServiceImpl implements FoodService {
 
     @Override
     public FoodResponseDto createFood(
-            CreateFoodRequest createFoodRequest, Category category, Restaurant restaurant) {
+            CreateFoodRequest createFoodRequest, FoodCategoryRequestDto category, Restaurant restaurant) {
 
         Food food = new Food();
-        food.setFoodCategory(category);
+        food.setFoodCategory(modelMapper.map(category, Category.class));
         food.setRestaurant(restaurant);
         food.setDescription(createFoodRequest.getDescription());
         food.setImages(createFoodRequest.getImages());
         food.setName(createFoodRequest.getName());
         food.setPrice(createFoodRequest.getPrice());
-        food.setIngredientsItems(createFoodRequest.getIngredients());
+        food.setIngredientsItems(createFoodRequest.getIngredientsItems().stream().map(i -> modelMapper.map(i, IngredientsItem.class)).toList());
         food.setSeasonal(createFoodRequest.isSeasonal());
         food.setVegetarian(createFoodRequest.isVegetarian());
+        food.setAvailable(true);
         food.setCreationDate(new Date());
 
         foodRepository.save(food);
@@ -106,10 +109,11 @@ public class FoodServiceImpl implements FoodService {
     }
 
     @Override
-    public Food updateAvailabilityStatus(Long foodId) {
+    public FoodResponseDto updateAvailabilityStatus(Long foodId) {
         Food food = findFoodById(foodId);
         food.setAvailable(!food.isAvailable());
-        return foodRepository.save(food);
+        foodRepository.save(food);
+        return modelMapper.map(food, FoodResponseDto.class);
     }
 
     private List<Food> filterByCategory(List<Food> foods, String foodCategory) {

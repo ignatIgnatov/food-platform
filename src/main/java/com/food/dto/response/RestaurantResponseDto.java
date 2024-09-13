@@ -22,4 +22,5 @@ public class RestaurantResponseDto {
     private List<String> images;
     private LocalDateTime registrationDate;
     private boolean open;
+    private ContactResponseDto contactInformation;
 }

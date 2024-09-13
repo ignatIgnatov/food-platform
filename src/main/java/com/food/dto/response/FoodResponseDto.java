@@ -11,12 +11,12 @@ public class FoodResponseDto {
     private String name;
     private String description;
     private Long price;
-    private CategoryResponseDto foodCategory;
+    private CategoryResponseDto category;
     private List<String> images;
     private boolean available;
     private boolean isVegetarian;
     private boolean isSeasonal;
-    private List<IngredientItemResponseDto> ingredientsItems;
+    private List<IngredientItemResponseDto> ingredients;
     private Date creationDate;
     private Long restaurantId;
 }

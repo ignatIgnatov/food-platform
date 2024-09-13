@@ -4,7 +4,6 @@ import com.food.dto.request.IngredientCategoryRequestDto;
 import com.food.dto.request.IngredientItemRequestDto;
 import com.food.dto.response.IngredientCategoryResponseDto;
 import com.food.dto.response.IngredientItemResponseDto;
-import com.food.model.IngredientCategory;
 import com.food.model.IngredientsItem;
 import com.food.service.IngredientsService;
 import lombok.RequiredArgsConstructor;
@@ -51,9 +50,9 @@ public class IngredientController {
     }
 
     @GetMapping("/restaurant/{id}/category")
-    public ResponseEntity<List<IngredientCategory>> getRestaurantIngredientCategory(
+    public ResponseEntity<List<IngredientCategoryResponseDto>> getRestaurantIngredientCategory(
             @PathVariable("id") Long id) {
-        List<IngredientCategory> ingredientCategories =
+        List<IngredientCategoryResponseDto> ingredientCategories =
                 ingredientsService.findIngredientCategoryByRestaurantId(id);
         return new ResponseEntity<>(ingredientCategories, HttpStatus.OK);
     }

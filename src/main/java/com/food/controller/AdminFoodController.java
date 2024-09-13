@@ -3,7 +3,6 @@ package com.food.controller;
 import com.food.dto.request.CreateFoodRequest;
 import com.food.dto.response.FoodResponseDto;
 import com.food.dto.response.MessageResponse;
-import com.food.model.Food;
 import com.food.model.Restaurant;
 import com.food.service.FoodService;
 import com.food.service.RestaurantService;
@@ -23,7 +22,7 @@ public class AdminFoodController {
     @PostMapping
     public ResponseEntity<FoodResponseDto> createFood(@RequestBody CreateFoodRequest request) {
         Restaurant restaurant = restaurantService.findRestaurantById(request.getRestaurantId());
-        FoodResponseDto food = foodService.createFood(request, request.getCategory(), restaurant);
+        FoodResponseDto food = foodService.createFood(request, request.getFoodCategory(), restaurant);
         return new ResponseEntity<>(food, HttpStatus.CREATED);
     }
 
@@ -36,8 +35,8 @@ public class AdminFoodController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Food> updateFoodAvailability(@PathVariable("id") Long id) {
-        Food food = foodService.updateAvailabilityStatus(id);
+    public ResponseEntity<FoodResponseDto> updateFoodAvailability(@PathVariable("id") Long id) {
+        FoodResponseDto food = foodService.updateAvailabilityStatus(id);
         return new ResponseEntity<>(food, HttpStatus.OK);
     }
 }
